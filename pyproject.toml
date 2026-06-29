@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "alarm-clock"
+version = "0.1.0"
+description = "Python CLI alarm clock with local JSON persistence"
+authors = ["Mithlesh Upadhyay <mithleshupadhyay515@gmail.com>"]
+readme = "README.md"
+packages = [{include = "alarm_clock", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^9.0.3"
+ruff = "^0.15.14"
+mypy = "^2.1.0"
+
+[tool.poetry.scripts]
+alarm-clock = "alarm_clock.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
