@@ -1,8 +1,23 @@
-# Alarm Clock
+# Alarm Clock CLI
 
 Python CLI alarm clock for adding, listing, cancelling, and running alarms in a
 foreground terminal process. It uses a local JSON file for persistence and does
 not use a web UI, React, or a database.
+
+## What It Does
+
+- Adds one-shot alarms using relative durations, local times, or ISO datetimes.
+- Lists pending alarms, with an option to include completed records.
+- Cancels alarms by full id or unique id prefix.
+- Runs a foreground scheduler that fires due alarms.
+- Persists alarms in a local JSON file.
+
+The scheduler is intentionally foreground-only. Creating an alarm stores it, but
+the alarm fires only while `alarm-clock run` is active.
+
+## Demo Video
+
+[Watch the unlisted YouTube walkthrough](https://youtu.be/uYwGL7Gg8ys).
 
 ## Requirements
 
@@ -79,6 +94,18 @@ poetry run alarm-clock --file /tmp/alarms.json run
 - `clear --all`: Remove every record.
 - `run`: Run the foreground scheduler.
 - `run --once`: Fire alarms that are already due, then exit.
+
+## Demo Flow
+
+Use a temporary store for a clean demo:
+
+```bash
+rm -f /tmp/alarm-clock-demo.json
+poetry run alarm-clock --file /tmp/alarm-clock-demo.json add --in 10s "Demo alarm"
+poetry run alarm-clock --file /tmp/alarm-clock-demo.json list
+poetry run alarm-clock --file /tmp/alarm-clock-demo.json run
+poetry run alarm-clock --file /tmp/alarm-clock-demo.json list --all
+```
 
 ## Validation
 

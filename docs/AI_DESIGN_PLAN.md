@@ -1,10 +1,11 @@
-# AI Design Plan
+# AI-Assisted Design Plan
 
 ## Refined Requirements
 
 The assignment asks for a Python CLI alarm clock with no web UI, no React, and
-no database. Because this is a 30-minute build exercise, the useful scope is a
-small but complete CLI workflow rather than a broad feature set.
+no database. Because the spec is intentionally open, I used AI before coding to
+turn that brief into a small, complete workflow that could be built and
+validated within the exercise time.
 
 Required behavior:
 
@@ -12,11 +13,11 @@ Required behavior:
 - Accept human-friendly schedules.
 - List scheduled alarms.
 - Cancel mistakes.
-- Run a foreground process that fires due alarms.
+- Run a scheduler that fires due alarms.
 - Persist alarms without a database.
 - Include tests and a README.
 
-Chosen constraints:
+Chosen constraints and non-goals:
 
 - Use standard-library `argparse` for the CLI to keep installation simple.
 - Use a JSON file at `~/.alarm_clock/alarms.json` for local persistence.
@@ -24,6 +25,10 @@ Chosen constraints:
   service is created implicitly.
 - Treat recurring alarms, snooze, custom audio files, and desktop
   notifications as non-goals for this exercise.
+
+The key scope decision is that `alarm-clock add` stores an alarm, while
+`alarm-clock run` is responsible for firing it. This avoids hiding background
+process behavior inside a simple CLI.
 
 ## CLI Shape
 
@@ -44,6 +49,13 @@ Scheduling inputs:
 - Durations: `30s`, `10m`, `2h`, `1d`, `1h30m`.
 - Time of day: `HH:MM` or `HH:MM:SS`.
 - ISO datetime: `YYYY-MM-DDTHH:MM:SS`.
+
+Expected behavior:
+
+- A past time-of-day value schedules for tomorrow.
+- A due alarm emits the terminal bell and prints the label.
+- Fired and cancelled alarms are hidden from the default list but visible with
+  `list --all`.
 
 ## Implementation Design
 
@@ -68,6 +80,17 @@ Failure handling:
 - Missing alarm references fail with a clear CLI error.
 - Prefix cancellation is allowed only when the prefix is unique.
 - Invalid JSON in the store fails fast instead of silently dropping data.
+
+## Engineering Tradeoffs
+
+- `argparse` was chosen over a richer CLI framework to avoid unnecessary
+  dependencies.
+- JSON persistence was chosen over SQLite because the assignment explicitly says
+  no database and the data model is small.
+- Foreground scheduling was chosen over daemon behavior because it is explicit,
+  easy to test, and honest for a small CLI submission.
+- One-shot alarms were chosen over recurring rules because recurring schedules
+  introduce more parsing and edge cases than the core exercise needs.
 
 ## Validation Plan
 
